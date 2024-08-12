@@ -1,0 +1,105 @@
+index="_internal" (host="splunk_container1" OR host="splunk_container2") source = *
+|rex field = _raw "(?p<log_level>(INFO|WARN|ERROR|DEBUG))"
+|eval container = case(host = "splunk_container1", "Splunk Enterprise", host = "splunk_container2", "Universal Forwarder")
+|dedup container, log_level, _raw
+|stats count by container, log_level
+|table container, log_level, count
+|chart count by log_level, container
+
+#To get logs on specific sourcetype : metric logs
+index=metrics sourcetype=metric_logs 
+| dedup source 
+| stats count by source, sourcetype 
+| eval "File Type"=case(sourcetype=="metric_logs","Metric Log") 
+| sort - count 
+| table _time, source, sourcetype, "File Type", count
+| rename _time as "Timestamp", source as "Source File", sourcetype as "Source Type", count as "Event Count"
+
+#To get logs on specific sourcetype : systen and application logs
+index=logs sourcetype=syslog 
+| dedup source 
+| stats count by source, sourcetype 
+| eval "File Type"=case(sourcetype=="syslog","System/Application Log") 
+| sort - count 
+| table _time, source, sourcetype, "File Type", count
+| rename _time as "Timestamp", source as "Source File", sourcetype as "Source Type", count as "Event Count"
+
+#To get logs on specific sourcetype : Security and compliance logs
+index=security sourcetype=secure_logs 
+| dedup source 
+| stats count by source, sourcetype 
+| eval "File Type"=case(sourcetype=="secure_logs","Security/Compliance Log") 
+| sort - count 
+| table _time, source, sourcetype, "File Type", count
+| rename _time as "Timestamp", source as "Source File", sourcetype as "Source Type", count as "Event Count"
+
+#To get logs on specific sourcetype : Miscellaneous logs
+index=misc sourcetype=misc_logs 
+| dedup source 
+| stats count by source, sourcetype 
+| eval "File Type"=case(sourcetype=="misc_logs","Miscellaneous Log") 
+| sort - count 
+| table _time, source, sourcetype, "File Type", count
+| rename _time as "Timestamp", source as "Source File", sourcetype as "Source Type", count as "Event Count"
+
+#To get all type of logs at once based on Source type
+(index=metrics sourcetype=metric_logs) 
+OR (index=logs sourcetype=syslog) 
+OR (index=security sourcetype=secure_logs) 
+OR (index=misc)
+| dedup source, index 
+| eval "Log Type"=case(
+    index=="metrics", "Metrics Log",
+    index=="logs", "System/Application Log",
+    index=="security", "Security/Compliance Log",
+    index=="misc", "Miscellaneous Log"
+)
+| eval Timestamp=strftime(_time, "%d-%m-%Y") 
+| stats count by Timestamp, "Log Type", source, index, sourcetype, _time
+| sort - _time 
+| table Timestamp, source, index, sourcetype, count
+| rename source as "Source File", index as "Index", sourcetype as "Source Type", count as "Event Count"
+| chart count by "Source Type"
+
+#To get all types of logs at once based on Logtype
+(index=metrics sourcetype=metric_logs) 
+OR (index=logs sourcetype=syslog) 
+OR (index=security sourcetype=secure_logs) 
+OR (index=misc)
+| dedup source, index 
+| eval "Log Type"=case(
+    index=="metrics", "Metrics Log",
+    index=="logs", "System/Application Log",
+    index=="security", "Security/Compliance Log",
+    index=="misc", "Miscellaneous Log"
+)
+| eval Timestamp=strftime(_time, "%d-%m-%Y") 
+| stats count by Timestamp, "Log Type", source, index, sourcetype, _time
+| sort - _time 
+| table Timestamp, source, index, sourcetype, count
+| rename source as "Source File", index as "Index", sourcetype as "Source Type", count as "Event Count"
+| chart count by "Log Type"
+
+
+#Comprehensive search sample 
+index=linux sourcetype=monitor
+| eval metric_type = case(
+    sourcetype=="df_metric.sh", "Disk Usage Metrics",
+    sourcetype=="vmstat_metric.sh", "VM Stat Metrics",
+    sourcetype=="interfaces_metric.sh", "Network Interface Metrics",
+    sourcetype=="cpu_metric.sh", "CPU Metrics",
+    sourcetype=="iostat_metric.sh", "IO Stat Metrics",
+    sourcetype=="ps_metric.sh", "Process Metrics",
+    1==1, "General Logs"
+  )
+| rex field=_raw "^(?<log_time>\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})"
+| eval log_time = if(isnull(log_time), _time, strptime(log_time, "%Y-%m-%d %H:%M:%S"))
+| stats latest(log_time) as latest_time by host, metric_type, sourcetype
+| dedup host metric_type
+| sort latest_time
+| table host, metric_type, sourcetype, latest_time
+| rename host as "Hostname", metric_type as "Log/Metric Type", sourcetype as "Source Type", latest_time as "Latest Log Time"
+
+
+
+
