@@ -1,0 +1,208 @@
+# Metrics Logs
+[script://./bin/cpu.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+[script://./bin/df.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+[script://./bin/vmstat.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+[script://./bin/iostat.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+[script://./bin/interfaces_metric.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+[script://./bin/cpu_metric.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+[script://./bin/df_metric.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+[script://./bin/iostat_metric.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+[script://./bin/ps_metric.sh]
+disabled = false
+index = metrics
+sourcetype = metric_logs
+
+# System and Application Logs
+[monitor:///var/log]
+disabled = false
+index = logs
+sourcetype = syslog
+
+[monitor:///etc]
+disabled = false
+index = logs
+sourcetype = syslog
+
+[monitor:///Library/Logs]
+disabled = false
+index = logs
+sourcetype = syslog
+
+[monitor:///home/*/.bash_history]
+disabled = false
+index = logs
+sourcetype = syslog
+
+[monitor:///root/.bash_history]
+disabled = false
+index = logs
+sourcetype = syslog
+
+[monitor:///var/adm]
+disabled = true
+index = logs
+sourcetype = syslog
+
+[script://./bin/lastlog.sh]
+disabled = false
+index = logs
+sourcetype = syslog
+
+[script://./bin/service.sh]
+disabled = false
+index = logs
+sourcetype = syslog
+
+[script://./bin/top.sh]
+disabled = false
+index = logs
+sourcetype = syslog
+
+[script://./bin/uptime.sh]
+disabled = false
+index =  logs
+sourcetype = syslog
+
+[script://./bin/who.sh]
+disabled = false
+index =  logs
+sourcetype = syslog
+
+[script://./bin/version.sh]
+disabled = false
+index =  logs
+sourcetype = syslog
+
+
+# Security and Compliance Logs
+[script://./bin/openPorts.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+[script://./bin/openPortsEnhanced.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+[script://./bin/sshdChecker.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+[script://./bin/selinuxChecker.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+[script://./bin/passwd.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+[script://./bin/lsof.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+[script://./bin/netstat.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+[script://./bin/vsftpdChecker.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+[script://./bin/usersWithLoginPrivs.sh]
+disabled = false
+index = security
+sourcetype = secure_logs
+
+# Miscellaneous Logs
+
+[script://./bin/package.sh]
+disabled = false
+index = misc
+
+[script://./bin/update.sh]
+disabled = false
+index = misc
+sourcetype = secure_logs
+
+[script://./bin/uptime.sh]
+disabled = false
+index = misc
+
+[script://./bin/rlog.sh]
+disabled = true
+index = misc
+
+[script://./bin/protocol.sh]
+disabled = true
+index = misc
+
+[script://./bin/bandwidth.sh]
+disabled = true
+index = misc
+
+[script://./bin/hardware.sh]
+disabled = false
+index = misc
+
+[script://./bin/interfaces.sh]
+disabled = false
+index = misc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
