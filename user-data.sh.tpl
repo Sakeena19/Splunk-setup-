@@ -64,4 +64,4 @@ sudo docker network create --driver bridge splunknetwork
 sudo docker run --network splunknetwork --name splunk_container1 --hostname splunk_container1 -p 8001:8000 -e SPLUNK_PASSWORD="$SPLUNK_PASSWORD" -e SPLUNK_START_ARGS="--accept-license" -d splunk/splunk:latest
 
 # Runs the Splunk Universal Forwarder container in the created Docker network
-sudo docker run --network splunknetwork --name splunk_container2 --hostname splunk_container2 -e SPLUNK_PASSWORD="Sakeena@123" -e SPLUNK_START_ARGS="--accept-license" -e SPLUNK_STANDALONE_URL="splunk_container1" -d splunk/universalforwarder:latest
+sudo docker run --network splunknetwork --name splunk_container2 --hostname splunk_container2 -e SPLUNK_PASSWORD="$SPLUNK_PASSWORD"  -e SPLUNK_START_ARGS="--accept-license" -e SPLUNK_STANDALONE_URL="splunk_container1" -d splunk/universalforwarder:latest
